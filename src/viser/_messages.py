@@ -160,6 +160,13 @@ class NotificationMessage(Message):
     uuid: str
     props: NotificationProps
 
+    @override
+    def redundancy_key(self) -> str:
+        # Include the mode: the client only creates the toast on "show"
+        # (updates for a never-shown id are dropped), so an "update" queued
+        # shortly after must not cull an unsent "show" from the buffer.
+        return f"{super().redundancy_key()}-{self.mode}"
+
 
 @dataclasses.dataclass
 class NotificationProps:
