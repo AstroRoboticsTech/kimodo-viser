@@ -567,6 +567,7 @@ class GuiApi:
         order: float | None = None,
         expand_by_default: bool = True,
         visible: bool = True,
+        hint: str | None = None,
     ) -> GuiFolderHandle:
         """Add a folder, and return a handle that can be used to populate it.
 
@@ -576,6 +577,7 @@ class GuiApi:
             expand_by_default: Open the folder by default. Set to False to collapse it by
                 default.
             visible: Whether the component is visible.
+            hint: Optional help text, surfaced via a hover icon on the folder header.
 
         Returns:
             A handle that can be used as a context to populate the folder.
@@ -587,6 +589,7 @@ class GuiApi:
             label=label,
             expand_by_default=expand_by_default,
             visible=visible,
+            hint=hint,
         )
         self._websock_interface.queue_message(
             _messages.GuiFolderMessage(

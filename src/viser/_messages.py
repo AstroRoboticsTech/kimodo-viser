@@ -1192,6 +1192,8 @@ class GuiFolderProps:
     """Visibility state of the GUI folder."""
     expand_by_default: bool
     """Whether the folder should be expanded by default."""
+    hint: Optional[str]
+    """Optional help text shown via a hover icon on the folder header."""
 
 
 @dataclasses.dataclass

@@ -262,7 +262,7 @@ export interface GuiFolderMessage {
   type: "GuiFolderMessage";
   uuid: string;
   container_uuid: string;
-  props: {'order': number, 'label': string, 'visible': boolean, 'expand_by_default': boolean};
+  props: {'order': number, 'label': string, 'visible': boolean, 'expand_by_default': boolean, 'hint': (string | null)};
 }
 /** GuiMarkdownMessage(uuid: 'str', container_uuid: 'str', props: 'GuiMarkdownProps')
  *
