@@ -93,11 +93,13 @@ export const theme = createTheme({
     Button: Button.extend({
       defaultProps: {
         radius: "md",
-        variant: "light",
+        // Filled (not "light") so buttons read as vibrant + clearly enabled —
+        // the light tint looked disabled. autoContrast picks readable text.
+        variant: "filled",
         styles: {
-          root: { fontWeight: 500 },
+          root: { fontWeight: 600 },
           label: {
-            fontWeight: 500,
+            fontWeight: 600,
           },
         },
       },
