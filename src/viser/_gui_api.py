@@ -232,6 +232,62 @@ class GuiApi:
             _messages.FileTransferPart,
             self._handle_file_transfer_part,
         )
+        self._websock_interface.register_handler(
+            _messages.NavStepClickedMessage,
+            self._handle_nav_step_clicked,
+        )
+
+        # Top stage-stepper navigation state.
+        self._nav_steps: tuple = ()
+        self._nav_title: str = ""
+        self._nav_subtitle: str = ""
+        self._nav_select_cb = None
+
+    def configure_stepper_nav(
+        self,
+        steps,
+        active: str,
+        *,
+        on_select=None,
+        title: str = "",
+        subtitle: str = "",
+    ) -> None:
+        """Configure the horizontal stage-stepper nav shown over the 3D view.
+
+        ``steps`` is a sequence of ``{"id", "label", "sublabel"}`` dicts; ``active``
+        is the id of the current step; ``on_select(step_id)`` is called when the
+        user clicks a step. Call again (or use ``set_nav_active``) to update.
+        """
+        self._nav_steps = tuple(
+            {"id": s["id"], "label": s["label"], "sublabel": s.get("sublabel")}
+            for s in steps
+        )
+        self._nav_title = title
+        self._nav_subtitle = subtitle
+        if on_select is not None:
+            self._nav_select_cb = on_select
+        self._send_nav(active)
+
+    def set_nav_active(self, active: str) -> None:
+        """Update just the active step of the stepper nav."""
+        self._send_nav(active)
+
+    def _send_nav(self, active: str) -> None:
+        self._websock_interface.queue_message(
+            _messages.NavStepperMessage(
+                steps=self._nav_steps,
+                active=active,
+                title=self._nav_title,
+                subtitle=self._nav_subtitle,
+            )
+        )
+
+    async def _handle_nav_step_clicked(
+        self, client_id: ClientId, message: _messages.NavStepClickedMessage
+    ) -> None:
+        del client_id
+        if self._nav_select_cb is not None:
+            self._nav_select_cb(message.step_id)
 
     async def _handle_close_modal_request(
         self, client_id: ClientId, message: _messages.GuiCloseModalRequestMessage

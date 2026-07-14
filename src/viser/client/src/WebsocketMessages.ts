@@ -583,6 +583,25 @@ export interface CameraKeyboardControlsMessage {
   type: "CameraKeyboardControlsMessage";
   enable: boolean;
 }
+/** Server->client: define / update the top stage-stepper navigation bar.
+ *
+ * (automatically generated)
+ */
+export interface NavStepperMessage {
+  type: "NavStepperMessage";
+  steps: {'id': string, 'label': string, 'sublabel': (string | null)}[];
+  active: string;
+  title: string;
+  subtitle: string;
+}
+/** Client->server: a stepper step was clicked.
+ *
+ * (automatically generated)
+ */
+export interface NavStepClickedMessage {
+  type: "NavStepClickedMessage";
+  step_id: string;
+}
 /** Environment Map message.
  *
  * (automatically generated)
@@ -1183,6 +1202,8 @@ export type Message =
   | KeyboardMessage
   | KeyboardListenMessage
   | CameraKeyboardControlsMessage
+  | NavStepperMessage
+  | NavStepClickedMessage
   | EnvironmentMapMessage
   | EnableLightsMessage
   | SetBoneOrientationMessage

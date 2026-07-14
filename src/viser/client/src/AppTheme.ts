@@ -12,43 +12,74 @@ import {
 } from "@mantine/core";
 import { themeToVars } from "@mantine/vanilla-extract";
 
+// animo brand blue (152,189,255) expanded into a Mantine 10-shade scale. Index 6
+// is the primary (filled buttons / focus rings); lighter shades back the "light"
+// button + input tints.
+const brand: [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+] = [
+  "#eef4ff",
+  "#dbe6ff",
+  "#b6ccff",
+  "#98bdff",
+  "#7aa5f7",
+  "#6293f3",
+  "#4f86f8",
+  "#3f72dd",
+  "#3463c4",
+  "#2453ac",
+];
+
 export const theme = createTheme({
   fontFamily: "Inter",
   autoContrast: true,
+  primaryColor: "brand",
+  primaryShade: 6,
+  colors: { brand },
+  defaultRadius: "md",
   components: {
     Checkbox: Checkbox.extend({
-      defaultProps: {
-        radius: "xs",
-      },
-    }),
-    ColorInput: ColorInput.extend({
-      defaultProps: {
-        radius: "xs",
-      },
-    }),
-    Select: Select.extend({
       defaultProps: {
         radius: "sm",
       },
     }),
+    ColorInput: ColorInput.extend({
+      defaultProps: {
+        radius: "md",
+      },
+    }),
+    Select: Select.extend({
+      defaultProps: {
+        radius: "md",
+      },
+    }),
     Textarea: Textarea.extend({
       defaultProps: {
-        radius: "xs",
+        radius: "md",
       },
     }),
     TextInput: TextInput.extend({
       defaultProps: {
-        radius: "xs",
+        radius: "md",
       },
     }),
     NumberInput: NumberInput.extend({
       defaultProps: {
-        radius: "xs",
+        radius: "md",
       },
     }),
     Paper: Paper.extend({
       defaultProps: {
-        radius: "xs",
+        radius: "md",
         shadow: "0",
       },
     }),
@@ -56,15 +87,17 @@ export const theme = createTheme({
       defaultProps: {
         variant: "subtle",
         color: "gray",
-        radius: "xs",
+        radius: "md",
       },
     }),
     Button: Button.extend({
       defaultProps: {
-        radius: "xs",
+        radius: "md",
+        variant: "light",
         styles: {
+          root: { fontWeight: 500 },
           label: {
-            fontWeight: 450,
+            fontWeight: 500,
           },
         },
       },

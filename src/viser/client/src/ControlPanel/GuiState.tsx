@@ -12,6 +12,7 @@ import {
   ThemeConfigurationMessage,
   TimelineMessage,
   ArrowKeyOverlayMessage,
+  NavStepperMessage,
 } from "../WebsocketMessages";
 
 interface GuiState {
@@ -38,6 +39,7 @@ interface GuiState {
   };
   timeline: TimelineMessage | null;
   arrowKeyOverlay: ArrowKeyOverlayMessage | null;
+  nav: NavStepperMessage | null;
 }
 
 interface GuiActions {
@@ -57,6 +59,7 @@ interface GuiActions {
   ) => void;
   setTimeline: (timeline: TimelineMessage) => void;
   setArrowKeyOverlay: (overlay: ArrowKeyOverlayMessage) => void;
+  setNav: (nav: NavStepperMessage) => void;
 }
 
 const searchParams = new URLSearchParams(window.location.search);
@@ -86,6 +89,7 @@ const cleanGuiState: GuiState = {
   uploadsInProgress: {},
   timeline: null,
   arrowKeyOverlay: null,
+  nav: null,
 };
 
 export function computeRelativeLuminance(color: string) {
@@ -217,6 +221,10 @@ export function useGuiState(initialServer: string) {
         setArrowKeyOverlay: (overlay) =>
           set((state) => {
             state.arrowKeyOverlay = overlay;
+          }),
+        setNav: (nav) =>
+          set((state) => {
+            state.nav = nav;
           }),
       })),
     ),

@@ -1,34 +1,44 @@
 import { style } from "@vanilla-extract/css";
-import { vars } from "../AppTheme";
 
+// Sections are NOT boxes: the whole panel is one elevated card (SidebarPanel),
+// and each folder renders as a titled, spacious section divided by a hairline.
 export const folderWrapper = style({
-  borderWidth: "1px",
   position: "relative",
-  marginLeft: vars.spacing.xs,
-  marginRight: vars.spacing.xs,
-  marginTop: vars.spacing.xs,
-  marginBottom: vars.spacing.xs,
-  paddingBottom: `calc(${vars.spacing.xs} - 0.5em)`,
 });
 
-export const folderLabel = style({
-  fontSize: "0.875em",
-  position: "absolute",
-  padding: "0 0.375em 0 0.375em",
-  top: 0,
-  left: "0.375em",
-  transform: "translateY(-50%)",
+export const folderHeader = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: "0.85em 0.95em 0.55em",
   userSelect: "none",
-  fontWeight: 500,
+});
+
+export const folderDivider = style({
+  borderBottom: "1px solid light-dark(#eef0f3, #26282f)",
+  marginLeft: "0.95em",
+  marginRight: "0.95em",
+});
+
+// depth 0 = the stage title (large); depth >= 1 = section title (small-caps).
+export const stageLabel = style({
+  fontSize: "1.02rem",
+  fontWeight: 700,
+  letterSpacing: "-0.01em",
+});
+
+export const sectionLabel = style({
+  fontSize: "0.72rem",
+  fontWeight: 700,
+  textTransform: "uppercase",
+  letterSpacing: "0.06em",
+  color: "light-dark(#9298a3, #8c919b)",
 });
 
 export const folderToggleIcon = style({
-  width: "0.9em",
-  height: "0.9em",
-  strokeWidth: 3,
-  top: "0.1em",
-  position: "relative",
-  marginLeft: "0.25em",
-  marginRight: "-0.1em",
-  opacity: 0.5,
+  width: "1em",
+  height: "1em",
+  strokeWidth: 2.5,
+  opacity: 0.45,
+  flexShrink: 0,
 });

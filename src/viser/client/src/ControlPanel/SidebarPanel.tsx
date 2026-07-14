@@ -95,6 +95,8 @@ export default function SidebarPanel({
           boxSizing: "content-box",
           transition: "width 0.5s 0s",
           zIndex: 20,
+          // soft neutral panel so the section cards read as elevated surfaces
+          background: "light-dark(#f6f7f9, #121316)",
         }}
       >
         <Box
@@ -103,11 +105,29 @@ export default function SidebarPanel({
           style={{
             width: width,
             height: "100%",
+            boxSizing: "border-box",
+            padding: "0.55em",
             display: "flex",
-            flexDirection: "column",
           }}
         >
-          {children}
+          {/* One spacious elevated card holds the whole panel; the soft panel
+              background shows around it (floating look, like the top stepper). */}
+          <Box
+            style={{
+              flex: 1,
+              minHeight: 0,
+              display: "flex",
+              flexDirection: "column",
+              overflowY: "auto",
+              background: "light-dark(#ffffff, #1b1d22)",
+              borderRadius: "16px",
+              border: "1px solid light-dark(#ececf0, #2b2e35)",
+              boxShadow:
+                "0 2px 12px light-dark(rgba(17,24,39,0.06), rgba(0,0,0,0.35))",
+            }}
+          >
+            {children}
+          </Box>
         </Box>
       </Paper>
     </SidebarPanelContext.Provider>

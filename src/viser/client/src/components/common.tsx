@@ -61,7 +61,7 @@ function LabeledInput(props: {
         // The per-layer offset here is just eyeballed.
         pr="xs"
         style={{
-          width: `${7.25 - props.folderDepth * 0.6375}em`,
+          width: `${8.25 - props.folderDepth * 0.5}em`,
           flexShrink: 0,
           position: "relative",
         }}

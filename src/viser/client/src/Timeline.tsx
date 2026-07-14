@@ -13,6 +13,7 @@ import React, {
 import { TimelineMessage } from "./WebsocketMessages";
 import { ViewerContext } from "./ViewerContext";
 import { FRAME_LABELS_HEIGHT, TRACK_HEIGHT } from "./TimelineConstants";
+import { TimelineTransport } from "./TimelineTransport";
 import {
   DRAW_BUFFER,
   KEYFRAME_HIT_RADIUS,
@@ -2912,7 +2913,15 @@ export function Timeline({
   for (const track of timelineState.tracks) {
     tracksHeight += TRACK_HEIGHT * (track.height_scale || 1.0);
   }
-  const containerHeight = FRAME_LABELS_HEIGHT + tracksHeight;
+  // Auto-fit to the tracks with a little breathing room, but cap at a share of
+  // the viewport so a robot with many groups never eats the whole screen.
+  const viewportH =
+    typeof window !== "undefined" ? window.innerHeight : 900;
+  const maxHeight = Math.round(viewportH * 0.58);
+  const containerHeight = Math.min(
+    FRAME_LABELS_HEIGHT + tracksHeight + 8,
+    maxHeight,
+  );
 
   return (
     <div
@@ -2931,6 +2940,13 @@ export function Timeline({
         backgroundColor: theme.backgroundColor,
       }}
     >
+      <TimelineTransport
+        fps={timelineState.fps}
+        startFrame={timelineState.start_frame}
+        endFrame={timelineState.end_frame}
+        currentFrame={timelineState.current_frame}
+        onFrameChange={(f) => onFrameChange?.(f)}
+      />
       <canvas
         ref={canvasRef}
         onMouseDown={handleMouseDown}

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import dataclasses
 import uuid
-from typing import Any, ClassVar, Dict, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, ClassVar, Dict, Optional, Tuple, Type, TypedDict, TypeVar, Union
 
 import numpy as np
 import numpy.typing as npt
@@ -282,6 +282,38 @@ class CameraKeyboardControlsMessage(Message):
     @override
     def redundancy_key(self) -> str:
         return type(self).__name__
+
+
+class NavStep(TypedDict):
+    """One step in the top stage-stepper navigation."""
+
+    id: str
+    label: str
+    sublabel: Optional[str]
+
+
+@dataclasses.dataclass
+class NavStepperMessage(Message):
+    """Server->client: define / update the top stage-stepper navigation bar.
+
+    Rendered as a horizontal stepper over the 3D view; clicking a step sends a
+    ``NavStepClickedMessage`` back. Re-send to update the active step."""
+
+    steps: Tuple[NavStep, ...]
+    active: str
+    title: str
+    subtitle: str
+
+    @override
+    def redundancy_key(self) -> str:
+        return type(self).__name__
+
+
+@dataclasses.dataclass
+class NavStepClickedMessage(Message):
+    """Client->server: a stepper step was clicked."""
+
+    step_id: str
 
 
 @dataclasses.dataclass

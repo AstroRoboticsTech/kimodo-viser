@@ -38,6 +38,7 @@ import { useGuiState } from "./ControlPanel/GuiState";
 import { searchParamKey } from "./SearchParamsUtils";
 import { WebsocketMessageProducer } from "./WebsocketInterface";
 import { Titlebar } from "./Titlebar";
+import { StepperNav } from "./StepperNav";
 import { ViserModal } from "./Modal";
 import { useSceneTreeState } from "./SceneTreeState";
 import { useEnvironmentState } from "./EnvironmentState";
@@ -354,9 +355,11 @@ function ViewerContents({ children }: { children: React.ReactNode }) {
                 flexGrow: 1,
                 overflow: "hidden",
                 height: "100%",
+                position: "relative",
               })}
             >
               {canvases}
+              {messageSource === "websocket" && <StepperNav />}
               {showLogo && messageSource === "websocket" && <ViserLogo />}
             </Box>
             {messageSource === "websocket" && (

@@ -46,6 +46,7 @@ function useMessageHandler() {
   const updateUploadState = viewer.useGui((state) => state.updateUploadState);
   const setTimeline = viewer.useGui((state) => state.setTimeline);
   const setArrowKeyOverlay = viewer.useGui((state) => state.setArrowKeyOverlay);
+  const setNav = viewer.useGui((state) => state.setNav);
 
   // Same as addSceneNode, but make a parent in the form of a dummy coordinate
   // frame if it doesn't exist yet.
@@ -161,6 +162,11 @@ function useMessageHandler() {
       // Set arrow-key overlay state (shown above timeline).
       case "ArrowKeyOverlayMessage": {
         setArrowKeyOverlay(message);
+        return;
+      }
+      // Configure the top stage-stepper navigation bar.
+      case "NavStepperMessage": {
+        setNav(message);
         return;
       }
       // Configure the theme.

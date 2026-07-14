@@ -2,16 +2,22 @@ import * as React from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { GuiFolderMessage } from "../WebsocketMessages";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
-import { Box, Collapse, Paper } from "@mantine/core";
+import { Box, Collapse } from "@mantine/core";
 import { GuiComponentContext } from "../ControlPanel/GuiComponentContext";
 import { ViewerContext } from "../ViewerContext";
-import { folderLabel, folderToggleIcon, folderWrapper } from "./Folder.css";
+import {
+  folderDivider,
+  folderHeader,
+  folderToggleIcon,
+  folderWrapper,
+  sectionLabel,
+  stageLabel,
+} from "./Folder.css";
 import { shallowObjectKeysEqual } from "../utils/shallowObjectKeysEqual";
 
 export default function FolderComponent({
   uuid,
   props: { label, visible, expand_by_default },
-  nextGuiUuid,
 }: GuiFolderMessage & { nextGuiUuid: string | null }) {
   const viewer = React.useContext(ViewerContext)!;
   const [opened, { toggle }] = useDisclosure(expand_by_default);
@@ -21,35 +27,36 @@ export default function FolderComponent({
   );
   const guiContext = React.useContext(GuiComponentContext)!;
   const isEmpty = guiIdSet === undefined || Object.keys(guiIdSet).length === 0;
-  const nextGuiType = viewer.useGui((state) =>
-    nextGuiUuid == null ? null : state.guiConfigFromUuid[nextGuiUuid]?.type,
-  );
+
+  // depth 0 = the stage (large title); deeper = a titled section (small-caps).
+  const depth = guiContext.folderDepth;
+  const isStage = depth === 0;
 
   const ToggleIcon = opened ? IconChevronUp : IconChevronDown;
+  const showBody = opened && !isEmpty;
   if (!visible) return null;
   return (
-    <Paper
-      withBorder
-      className={folderWrapper}
-      mb={nextGuiType === "GuiFolderMessage" ? "md" : undefined}
-    >
-      <Paper
-        className={folderLabel}
-        style={{
-          cursor: isEmpty ? undefined : "pointer",
-        }}
+    <Box className={folderWrapper}>
+      <Box
+        className={folderHeader}
+        style={{ cursor: isEmpty ? undefined : "pointer" }}
         onClick={toggle}
       >
-        {label}
+        <span className={isStage ? stageLabel : sectionLabel}>{label}</span>
         <ToggleIcon
           className={folderToggleIcon}
-          style={{
-            display: isEmpty ? "none" : undefined,
-          }}
+          style={{ display: isEmpty ? "none" : undefined }}
         />
-      </Paper>
-      <Collapse in={opened && !isEmpty}>
-        <Box pt="0.2em">
+      </Box>
+      {showBody && <div className={folderDivider} />}
+      <Collapse in={showBody}>
+        <Box
+          style={{
+            // stage body sits flush so sections align to the card; section
+            // bodies indent their controls in from the card edge.
+            padding: isStage ? "0.5em 0.15em 0.3em" : "0.4em 0.95em 0.75em",
+          }}
+        >
           <GuiComponentContext.Provider
             value={{
               ...guiContext,
@@ -60,9 +67,6 @@ export default function FolderComponent({
           </GuiComponentContext.Provider>
         </Box>
       </Collapse>
-      <Collapse in={!(opened && !isEmpty)}>
-        <Box p="xs"></Box>
-      </Collapse>
-    </Paper>
+    </Box>
   );
 }

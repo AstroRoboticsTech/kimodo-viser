@@ -2,7 +2,7 @@ import * as React from "react";
 import { ViserInputComponent } from "./common";
 import { GuiComponentContext } from "../ControlPanel/GuiComponentContext";
 import { GuiCheckboxMessage } from "../WebsocketMessages";
-import { Box, Checkbox, Tooltip } from "@mantine/core";
+import { Box, Checkbox, Flex, Text, Tooltip } from "@mantine/core";
 
 export default function CheckboxComponent({
   uuid,
@@ -40,7 +40,28 @@ export default function CheckboxComponent({
       </Tooltip>
     );
   }
+  // Full-width row: the label uses the whole width (no cramped wrapping) and the
+  // checkbox is pushed to the right edge, so the row actually consumes its width.
   return (
-    <ViserInputComponent {...{ uuid, label }}>{input}</ViserInputComponent>
+    <ViserInputComponent uuid={uuid}>
+      <Flex align="center" justify="space-between" gap="xs">
+        {label !== undefined && (
+          <Text
+            c="dimmed"
+            style={{
+              fontSize: "0.875em",
+              fontWeight: 450,
+              lineHeight: "1.3em",
+              letterSpacing: "-0.5px",
+              flexGrow: 1,
+            }}
+            unselectable="off"
+          >
+            <label htmlFor={uuid}>{label}</label>
+          </Text>
+        )}
+        <Box style={{ flexShrink: 0 }}>{input}</Box>
+      </Flex>
+    </ViserInputComponent>
   );
 }
