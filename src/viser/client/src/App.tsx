@@ -426,23 +426,27 @@ function TimelineWithState() {
 
   const handleFrameChange = React.useCallback(
     (frame: number) => {
-      // Optimistically update the local state immediately for responsive UI
-      if (timelineState) {
+      // Read the timeline via getState() rather than closing over `timelineState`:
+      // during playback this callback is invoked once per frame, and depending on
+      // `timelineState` would give it a new identity every frame, forcing every
+      // consumer (incl. the play-interval effect) to re-run each tick.
+      const cur = viewer.useGui.getState().timeline;
+      if (cur) {
         viewer.useGui.setState({
           timeline: {
-            ...timelineState,
+            ...cur,
             current_frame: frame,
           },
         });
       }
-      
+
       // Send update to server
       sendMessageThrottled({
         type: "TimelineUpdateMessage",
         current_frame: frame,
       });
     },
-    [sendMessageThrottled, timelineState, viewer],
+    [sendMessageThrottled, viewer],
   );
 
   const handleKeyframeAdd = React.useCallback(

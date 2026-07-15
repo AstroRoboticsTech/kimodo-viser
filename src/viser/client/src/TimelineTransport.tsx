@@ -30,11 +30,17 @@ export function TimelineTransport({
 }) {
   const [playing, setPlaying] = useState(false);
 
-  // Refs so the interval always reads the latest frame/range without re-arming.
+  // Refs so the interval always reads the latest frame/range/callback without
+  // re-arming. onFrameChange gets a new identity every frame (its parent closes
+  // over the timeline state it optimistically advances), so it must NOT sit in the
+  // effect deps — otherwise the interval is torn down and recreated on every frame
+  // and playback never progresses past the first tick.
   const frameRef = useRef(currentFrame);
   frameRef.current = currentFrame;
   const rangeRef = useRef({ startFrame, endFrame });
   rangeRef.current = { startFrame, endFrame };
+  const onFrameChangeRef = useRef(onFrameChange);
+  onFrameChangeRef.current = onFrameChange;
 
   useEffect(() => {
     if (!playing) return;
@@ -44,10 +50,10 @@ export function TimelineTransport({
       let next = frameRef.current + 1;
       if (next > e) next = s; // loop
       frameRef.current = next;
-      onFrameChange(next);
+      onFrameChangeRef.current(next);
     }, period);
     return () => window.clearInterval(id);
-  }, [playing, fps, onFrameChange]);
+  }, [playing, fps]);
 
   // Stop playing if the clip has no length.
   useEffect(() => {
